@@ -7,6 +7,8 @@ Compare the usage, performance and data sizes of several Java Serialization fram
 - JVM native solution
 - MicroStream Serializer
 - Google Kryo
+- CBOR (implemented by Jackson CBOR dataformat)
+- Hessian
 
 **JSON**
 
@@ -16,6 +18,10 @@ Compare the usage, performance and data sizes of several Java Serialization fram
 **XML**
 
 - JAXB
+
+**YAML**
+
+- snakeYAML
 
 ## Test method
 

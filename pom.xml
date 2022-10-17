@@ -34,8 +34,11 @@
         <module>microstream</module>
         <module>kryo</module>
         <module>jackson</module>
+        <module>cbor</module>
+        <module>hessian</module>
         <module>gson</module>
         <module>jaxb</module>
+        <module>yaml</module>
         <module>jvm</module>
     </modules>
 
