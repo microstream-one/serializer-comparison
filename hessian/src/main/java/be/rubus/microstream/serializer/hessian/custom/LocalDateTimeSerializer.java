@@ -32,7 +32,7 @@ public class LocalDateTimeSerializer
             if (ref < -1)
             {
                 out.writeString("value");
-                out.writeUTCDate(((LocalDateTime) obj).toInstant(ZoneOffset.UTC)
+                out.writeLong(((LocalDateTime) obj).toInstant(ZoneOffset.UTC)
                                          .toEpochMilli());
                 out.writeMapEnd();
             }
@@ -45,7 +45,7 @@ public class LocalDateTimeSerializer
                     out.writeObjectBegin(cl.getName());
                 }
 
-                out.writeUTCDate(((LocalDateTime) obj).toInstant(ZoneOffset.UTC)
+                out.writeLong(((LocalDateTime) obj).toInstant(ZoneOffset.UTC)
                                          .toEpochMilli());
             }
         }
