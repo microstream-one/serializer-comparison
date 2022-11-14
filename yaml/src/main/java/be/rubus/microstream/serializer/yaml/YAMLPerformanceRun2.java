@@ -2,6 +2,8 @@ package be.rubus.microstream.serializer.yaml;
 
 import be.rubus.microstream.serializer.data.GenerateData;
 import be.rubus.microstream.serializer.data.SomeData;
+import be.rubus.microstream.serializer.yaml.custom.MyCustomConstructor;
+import be.rubus.microstream.serializer.yaml.custom.MyCustomRepresenter;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 import org.openjdk.jmh.runner.Runner;
@@ -35,7 +37,8 @@ public class YAMLPerformanceRun2
 
     private List<SomeData> testData;
 
-    private Yaml reusedYaml;
+    private Yaml reusedYamlOut;
+    private Yaml reusedYamlIn;
 
     private List<byte[]> serializedContent;
 
@@ -44,13 +47,14 @@ public class YAMLPerformanceRun2
     {
         this.testData = GenerateData.testData(100_000);
 
-        this.reusedYaml = new Yaml();
+        this.reusedYamlOut = new Yaml(new MyCustomRepresenter());
+        this.reusedYamlIn = new Yaml(new MyCustomConstructor());
         this.prepareDeserializedData();
     }
 
     private void prepareDeserializedData()
     {
-        final Yaml yaml = new Yaml();
+        final Yaml yaml = new Yaml(new MyCustomRepresenter());
 
         this.serializedContent = new ArrayList<>();
         for (final SomeData input : this.testData)
@@ -73,7 +77,7 @@ public class YAMLPerformanceRun2
     public void serializeWithInitialization(final Blackhole blackhole)
     {
 
-        final Yaml yaml = new Yaml();
+        final Yaml yaml = new Yaml(new MyCustomRepresenter());
 
         for (final SomeData input : this.testData)
         {
@@ -90,7 +94,7 @@ public class YAMLPerformanceRun2
     {
         for (final SomeData input : this.testData)
         {
-            blackhole.consume(this.reusedYaml.dumpAs(input, Tag.BINARY, null)
+            blackhole.consume(this.reusedYamlOut.dumpAs(input, Tag.BINARY, null)
                                       .getBytes(Charset.defaultCharset()));
         }
 
@@ -102,7 +106,7 @@ public class YAMLPerformanceRun2
     public void deserializeWithInitialization(Blackhole blackhole)
     {
 
-        final Yaml yaml = new Yaml();
+        final Yaml yaml = new Yaml(new MyCustomConstructor());
 
         try
         {
@@ -134,7 +138,7 @@ public class YAMLPerformanceRun2
             {
                 ByteArrayInputStream data = new ByteArrayInputStream(input);
 
-                blackhole.consume(this.reusedYaml.loadAs(data, List.class));
+                blackhole.consume(this.reusedYamlIn.loadAs(data, List.class));
                 data.close();
 
             }

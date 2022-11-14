@@ -97,6 +97,7 @@ public class JVMPerformanceRun1
 
             data = (List<Product>) in.readObject();
 
+            in.close();
         } catch (final IOException | ClassNotFoundException e)
         {
             throw new RuntimeException(e);

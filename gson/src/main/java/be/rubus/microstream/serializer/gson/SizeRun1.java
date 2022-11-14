@@ -77,12 +77,9 @@ public class SizeRun1
     private static List<Product> deserialize(final byte[] bytes, final Gson gson)
     {
 
-        final List<Product> products = gson.fromJson(new String(bytes), new TypeToken<ArrayList<Product>>()
+        return gson.fromJson(new String(bytes), new TypeToken<ArrayList<Product>>()
         {
         }.getType());
-
-        return products;
-
 
     }
 

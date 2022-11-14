@@ -6,6 +6,9 @@ import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.StringJoiner;
 
 public class SomeData implements Serializable
 {
@@ -23,6 +26,7 @@ public class SomeData implements Serializable
         this.name = "Test Object " + i;
         this.value = 1000000000000L + i;
         this.now = LocalDateTime.now();
+        this.now = this.now.minusNanos(this.now.getNano());  // Only keep milliseconds, not the nanosecond field.
         this.x = i;
         this.big = BigDecimal.valueOf(1000000000.00 + i);
         this.intArray = new int[]{-i, -i, -i, -i};
@@ -94,4 +98,65 @@ public class SomeData implements Serializable
         this.intArray = intArray;
     }
 
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o)
+        {
+            return true;
+        }
+        if (!(o instanceof SomeData))
+        {
+            return false;
+        }
+
+        SomeData someData = (SomeData) o;
+
+        if (value != someData.value)
+        {
+            return false;
+        }
+        if (x != someData.x)
+        {
+            return false;
+        }
+        if (!Objects.equals(name, someData.name))
+        {
+            return false;
+        }
+        if (!Objects.equals(now, someData.now))
+        {
+            return false;
+        }
+        if (!Objects.equals(big, someData.big))
+        {
+            return false;
+        }
+        return Arrays.equals(intArray, someData.intArray);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + (int) (value ^ (value >>> 32));
+        result = 31 * result + (now != null ? now.hashCode() : 0);
+        result = 31 * result + x;
+        result = 31 * result + (big != null ? big.hashCode() : 0);
+        result = 31 * result + Arrays.hashCode(intArray);
+        return result;
+    }
+
+    @Override
+    public String toString()
+    {
+        return new StringJoiner(", ", SomeData.class.getSimpleName() + "[", "]")
+                .add("name='" + name + "'")
+                .add("value=" + value)
+                .add("now=" + now)
+                .add("x=" + x)
+                .add("big=" + big)
+                .add("intArray=" + Arrays.toString(intArray))
+                .toString();
+    }
 }

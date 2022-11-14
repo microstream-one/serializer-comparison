@@ -76,7 +76,7 @@ public class LocalDateTimeDeserializer
         {
             if (key.equals("value"))
             {
-                initValue = in.readUTCDate();
+                initValue = in.readLong();
             }
             else
             {
