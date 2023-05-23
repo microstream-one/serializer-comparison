@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package one.microstream.compare.serializer.proto.model;
+
+message Product {
+    int64 id = 1;
+    string name = 2;
+    string description = 3;
+
+    int32 rating = 4;
+
+}
+
+message ProductList {
+    repeated Product productEntity = 1;
+}

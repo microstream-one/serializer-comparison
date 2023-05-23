@@ -66,6 +66,7 @@
         <module>jaxb</module>
         <module>yaml</module>
         <module>jvm</module>
+        <module>protobuf</module>
     </modules>
 
 </project>

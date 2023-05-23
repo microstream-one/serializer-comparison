@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package one.microstream.compare.serializer.proto.model;
+
+import "google/protobuf/timestamp.proto";
+
+message SomeData {
+    string name = 1;
+    int64 value = 2;
+    google.protobuf.Timestamp now = 3;
+    int32 x = 4;
+
+    DecimalValue big = 5;
+
+    repeated int32 int_array = 6 [packed=true];
+
+}
+
+message DecimalValue {
+    uint32 scale = 1;
+    uint32 precision = 2;
+    bytes value = 3;
+}
