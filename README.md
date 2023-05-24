@@ -23,6 +23,12 @@ Compare the usage, performance and data sizes of several Java Serialization fram
 
 - snakeYAML
 
+**SQL and NoSql**
+
+Only scenario 1
+
+- Hibernate
+
 ## Test method
 
 The performance is measured through the _Java Microbenchmark Harness_ JMH library.

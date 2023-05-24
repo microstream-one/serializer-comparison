@@ -1,0 +1,20 @@
+# Have a postgres database available, for example with Docker
+docker run --name some-postgres -e POSTGRES_PASSWORD=mysecretpassword -e POSTGRES_DB=mydb -d -p 5432:5432 postgres
+
+# Make sure the JDBC url and credentials are correct in _hibernate.cfg.xml_
+
+# Make sure the table _product_ is available
+
+create table public.product
+(
+    id          bigint not null
+        primary key,
+    description varchar(255),
+    name        varchar(255),
+    rating      integer
+);
+
+alter table public.product
+    owner to postgres;
+
+# Data can be loaded through the `LoadData` class.
