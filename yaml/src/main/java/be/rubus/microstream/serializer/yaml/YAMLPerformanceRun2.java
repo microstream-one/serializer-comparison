@@ -9,7 +9,9 @@ import org.openjdk.jmh.infra.Blackhole;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
+import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.inspector.TrustedPrefixesTagInspector;
 import org.yaml.snakeyaml.nodes.Tag;
 
 import java.io.ByteArrayInputStream;
@@ -40,6 +42,8 @@ public class YAMLPerformanceRun2
     private Yaml reusedYamlOut;
     private Yaml reusedYamlIn;
 
+    private LoaderOptions options;
+
     private List<byte[]> serializedContent;
 
     @Setup
@@ -47,8 +51,11 @@ public class YAMLPerformanceRun2
     {
         this.testData = GenerateData.testData(100_000);
 
+        options = new LoaderOptions();
+        options.setTagInspector(new TrustedPrefixesTagInspector(List.of("be.rubus.microstream")));
+
         this.reusedYamlOut = new Yaml(new MyCustomRepresenter());
-        this.reusedYamlIn = new Yaml(new MyCustomConstructor());
+        this.reusedYamlIn = new Yaml(new MyCustomConstructor(options));
         this.prepareDeserializedData();
     }
 
@@ -106,7 +113,7 @@ public class YAMLPerformanceRun2
     public void deserializeWithInitialization(Blackhole blackhole)
     {
 
-        final Yaml yaml = new Yaml(new MyCustomConstructor());
+        final Yaml yaml = new Yaml(new MyCustomConstructor(options));
 
         try
         {

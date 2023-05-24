@@ -2,7 +2,9 @@ package be.rubus.microstream.serializer.yaml;
 
 import be.rubus.microstream.serializer.data.GenerateData;
 import be.rubus.microstream.serializer.data.Product;
+import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.inspector.TrustedPrefixesTagInspector;
 import org.yaml.snakeyaml.nodes.Tag;
 
 import java.io.ByteArrayInputStream;
@@ -19,7 +21,10 @@ public class SizeRun1
         System.out.printf("YAML test run %n");
         final List<Product> allProducts = GenerateData.products(10_000);
 
-        final Yaml mapper = new Yaml();
+        LoaderOptions options = new LoaderOptions();
+        options.setTagInspector(new TrustedPrefixesTagInspector(List.of("be.rubus.microstream")));
+
+        final Yaml mapper = new Yaml(options);
 
         // warmup
         final byte[] bytes = serialize(allProducts, mapper);
