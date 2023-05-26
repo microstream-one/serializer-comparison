@@ -39,7 +39,7 @@ public class MicroStreamPerformanceRun3
     @Setup
     public void init()
     {
-        this.allShops = GenerateData.testShopData();
+        this.allShops = GenerateData.testShopData(true);
 
         this.foundation = SerializerFoundation.New();
         this.foundation.registerEntityTypes(ArrayList.class, Shop.class, Order.class, OrderLine.class, ShopProduct.class, StockItem.class, Warehouse.class);
@@ -108,9 +108,7 @@ public class MicroStreamPerformanceRun3
     @Measurement(iterations = 5, time = 5)// Run 5 times 5 seconds
     public byte[] serializeWithReuse()
     {
-
         return this.reusedSerializer.serialize(this.allShops);
-
     }
 
     @Benchmark
@@ -155,9 +153,7 @@ public class MicroStreamPerformanceRun3
     @Measurement(iterations = 5, time = 5)// Run 5 times 5 seconds
     public List<Product> deserializeWithReuse()
     {
-
         return this.reusedSerializer.deserialize(this.serializedContent);
-
     }
 
 }

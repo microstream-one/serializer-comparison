@@ -14,7 +14,8 @@ public final class GenerateData
     private static final Faker faker = new Faker(
             new Locale("en-US"), new RandomService());
 
-    private static final Random rnd = new Random();
+    // A fixed seed so that generated data are almost the same everytime.
+    private static final Random rnd = new Random(123456789L);
 
     private GenerateData()
     {
@@ -47,12 +48,12 @@ public final class GenerateData
 
     }
 
-    public static List<Shop> testShopData()
+    public static List<Shop> testShopData(final boolean largeSet)
     {
-        final List<ShopProduct> products = generateProducts();
-        final List<Shop> shops = generateShops();
-        final Map<Shop, List<ShopProduct>> productsByShop = assignProductsToShops(shops, products);
-        createOrders(productsByShop);
+        final List<ShopProduct> products = generateProducts(largeSet);
+        final List<Shop> shops = generateShops(largeSet);
+        final Map<Shop, List<ShopProduct>> productsByShop = assignProductsToShops(shops, products, largeSet);
+        createOrders(productsByShop, largeSet);
         createStock(productsByShop);
 
         return shops;
@@ -72,15 +73,16 @@ public final class GenerateData
         }
     }
 
-    private static void createOrders(final Map<Shop, List<ShopProduct>> productsByShop)
+    private static void createOrders(final Map<Shop, List<ShopProduct>> productsByShop, final boolean largeSet)
     {
+        final int size = largeSet ? 5000 : 250;
         for (final Map.Entry<Shop, List<ShopProduct>> entry : productsByShop.entrySet())
         {
-            for (int i = 0; i < 5000; i++)
+            for (int i = 0; i < size; i++)
             {
                 final List<ShopProduct> productList = entry.getValue();
                 final List<OrderLine> orderLines = new ArrayList<>();
-                final int orderItems = rnd.nextInt(3);
+                final int orderItems = rnd.nextInt(3) + 1; // minimum 1.
                 for (int j = 0; j < orderItems; j++)
                 {
 
@@ -90,12 +92,12 @@ public final class GenerateData
                 }
 
                 final Order order = new Order(faker.name()
-                                                .name()
+                                                      .name()
                         , faker.date()
-                                                .past(600, TimeUnit.DAYS)
-                                                .toInstant()
-                                                .atZone(ZoneId.systemDefault())
-                                                .toLocalDate()
+                                                      .past(600, TimeUnit.DAYS)
+                                                      .toInstant()
+                                                      .atZone(ZoneId.systemDefault())
+                                                      .toLocalDate()
                         , orderLines);
                 entry.getKey()
                         .addOrder(order);
@@ -103,12 +105,15 @@ public final class GenerateData
         }
     }
 
-    private static Map<Shop, List<ShopProduct>> assignProductsToShops(final List<Shop> shops, final List<ShopProduct> products)
+    private static Map<Shop, List<ShopProduct>> assignProductsToShops(final List<Shop> shops
+            , final List<ShopProduct> products
+            , final boolean largeSet)
     {
         final Map<Shop, List<ShopProduct>> result = new HashMap<>();
+        final int size = largeSet ? 15 : 1;
         for (final ShopProduct product : products)
         {
-            final int nbrOfShops = rnd.nextInt(15) + 1;
+            final int nbrOfShops = rnd.nextInt(size) + 1;
             while (product.getShops()
                     .size() < nbrOfShops)
             {
@@ -127,20 +132,22 @@ public final class GenerateData
         return result;
     }
 
-    private static List<Shop> generateShops()
+    private static List<Shop> generateShops(final boolean largeSet)
     {
+        final int size = largeSet ? 35 : 2;
         final List<Shop> result = new ArrayList<>();
-        for (int idx = 1; idx <= 35; idx++)
+        for (int idx = 1; idx <= size; idx++)
         {
             result.add(new Shop("Shop " + idx, new Warehouse()));
         }
         return result;
     }
 
-    private static List<ShopProduct> generateProducts()
+    private static List<ShopProduct> generateProducts(final boolean largeSet)
     {
+        final int size = largeSet ? 10_000 : 500;
         final List<ShopProduct> result = new ArrayList<>();
-        for (int i = 1; i <= 10_000; i++)
+        for (int i = 1; i <= size; i++)
         {
             result.add(newShopProduct(i));
         }

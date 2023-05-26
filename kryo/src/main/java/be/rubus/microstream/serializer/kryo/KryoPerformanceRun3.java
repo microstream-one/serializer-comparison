@@ -42,7 +42,7 @@ public class KryoPerformanceRun3
     public void init()
     {
         //System.setProperty("kryo.unsafe", "false"); Does not avoid all reflection warnings/errors
-        allShops = GenerateData.testShopData();
+        this.allShops = GenerateData.testShopData(true);
 
         this.reusedKryo = createKryoInstance();
 
@@ -60,7 +60,6 @@ public class KryoPerformanceRun3
         kryo.writeClassAndObject(output, this.allShops);
         output.close();
         this.serializedContent = data.toByteArray();
-
 
     }
 

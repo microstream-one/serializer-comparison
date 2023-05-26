@@ -15,7 +15,7 @@ public class SizeRun3
     public static void main(final String[] args) throws Exception
     {
         System.out.printf("MicroStream test run Scenario 3 %n");
-        final List<Shop> allShops = GenerateData.testShopData();
+        final List<Shop> allShops = GenerateData.testShopData(true);
 
         final SerializerFoundation<?> foundation = SerializerFoundation.New();
 

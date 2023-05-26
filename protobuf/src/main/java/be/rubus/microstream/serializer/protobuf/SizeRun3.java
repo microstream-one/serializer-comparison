@@ -1,10 +1,12 @@
-package be.rubus.microstream.serializer.jvm;
+package be.rubus.microstream.serializer.protobuf;
 
 import be.rubus.microstream.serializer.data.GenerateData;
-import be.rubus.microstream.serializer.data.Product;
 import be.rubus.microstream.serializer.data.shop.Shop;
+import one.microstream.compare.serializer.proto.model.ShopOuterClass;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,17 +15,19 @@ public class SizeRun3
 
     public static void main(final String[] args) throws Exception
     {
-        System.out.printf("JVM Native test run Scenario 3 %n");
+
+        System.out.printf("ProtoBuf test run Scenario 3 %n");
         final List<Shop> allShops = GenerateData.testShopData(true);
 
         // warmup
-        final byte[] bytes = serialize(allShops);
+        ShopOuterClass.Shops protoVariant = Helper.createProtoVariant(allShops);
+        final byte[] bytes = serialize(protoVariant);
         System.out.printf("Serialized byte length %s %n", bytes.length);
 
         final List<Long> timings = new ArrayList<>();
         for (int i = 0; i < 10; i++)
         {
-            timings.add(serializeWithTiming(allShops));
+            timings.add(serializeWithTiming(protoVariant));
         }
         System.out.println("timings");
         System.out.println(timings);
@@ -39,39 +43,32 @@ public class SizeRun3
 
     }
 
-    private static long serializeWithTiming(final List<Shop> allShops)
+    private static long serializeWithTiming(final ShopOuterClass.Shops shops)
     {
         // Timings cannot be trusted since JVM performance optimizations.
         final long start = System.nanoTime();
-        serialize(allShops);
+        serialize(shops);
 
         final long end = System.nanoTime();
 
         return (end - start) / 1_000_000;
     }
 
-    private static byte[] serialize(final List<Shop> allShops)
+    private static byte[] serialize(final ShopOuterClass.Shops shops)
     {
-
-        final byte[] bytes;
+        final ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         try
         {
-            final ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            final ObjectOutputStream out = new ObjectOutputStream(stream);
-
-            out.writeObject(allShops);
-            out.close();
-
-            bytes = stream.toByteArray();
-        } catch (final IOException e)
+            shops.writeTo(bytes);
+            bytes.close();
+        } catch (IOException e)
         {
             throw new RuntimeException(e);
         }
-
-        return bytes;
+        return bytes.toByteArray();
     }
 
-    private static long deserializeWithTiming(final byte[] bytes)
+    private static long deserializeWithTiming(final byte[] bytes) throws Exception
     {
         // Timings cannot be trusted since JVM performance optimizations.
         final long start = System.nanoTime();
@@ -82,22 +79,21 @@ public class SizeRun3
         return (end - start) / 1_000_000;
     }
 
-    private static List<Product> deserialize(final byte[] bytes)
+    private static ShopOuterClass.Shops deserialize(final byte[] serializedContent) throws Exception
     {
-        final List<Product> data;
+        final ByteArrayInputStream in = new ByteArrayInputStream(serializedContent);
+
+        final ShopOuterClass.Shops result;
         try
         {
-            final ByteArrayInputStream stream = new ByteArrayInputStream(bytes);
-            final ObjectInputStream in = new ObjectInputStream(stream);
-
-            data = (List<Product>) in.readObject();
-
-        } catch (final IOException | ClassNotFoundException e)
+            result = ShopOuterClass.Shops.newBuilder()
+                    .mergeFrom(in)
+                    .build();
+        } catch (IOException e)
         {
             throw new RuntimeException(e);
         }
-        return data;
-
+        return result;
     }
 
 }

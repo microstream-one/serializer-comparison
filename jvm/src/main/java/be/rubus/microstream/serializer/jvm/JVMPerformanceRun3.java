@@ -34,7 +34,7 @@ public class JVMPerformanceRun3
     @Setup
     public void init() throws IOException
     {
-        this.data = GenerateData.testShopData();
+        this.data = GenerateData.testShopData(true);
 
         this.prepareDeserializedData();
     }
@@ -49,7 +49,6 @@ public class JVMPerformanceRun3
         out.close();
 
         this.serializedContent = bytes.toByteArray();
-
     }
 
     @TearDown

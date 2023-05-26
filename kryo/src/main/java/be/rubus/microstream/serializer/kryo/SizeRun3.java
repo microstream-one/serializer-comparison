@@ -18,11 +18,11 @@ public class SizeRun3
     public static void main(final String[] args)
     {
         System.out.printf("Kryo test run Scenario 3 %n");
-        final List<Shop> allShops = GenerateData.testShopData();
+        final List<Shop> allShops = GenerateData.testShopData(true);
 
 
         final Kryo kryo = new Kryo();
-        kryo.setReferences(true);
+        kryo.setReferences(true);  // Because of the circular references
         kryo.register(ArrayList.class);
         kryo.register(Shop.class);
         kryo.register(Order.class);
