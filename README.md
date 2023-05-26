@@ -25,9 +25,13 @@ Compare the usage, performance and data sizes of several Java Serialization fram
 
 **SQL and NoSql**
 
-Only scenario 1
 
-- Hibernate
+- Hibernate (Only scenario 1)
+- Redis
+
+**Schema based**
+
+- Protobuf
 
 ## Test method
 
@@ -42,7 +46,7 @@ The following scenarios are tested
 
 - Scenario1: 1 single List with a large number of objects.
 - Scenario2: Serialize and deserialize many small objects
-- Scenario3: Object graph with Circular dependency **Not implemented yet** (Will adapt the Bookstore demo model for this purpose)
+- Scenario3: Object graph with Circular dependency
 
 ## Results
 
@@ -54,6 +58,3 @@ https://microstream.atlassian.net/wiki/spaces/MSG/pages/1958674451/Serializer
 Compare with specialized serializers like
 
 - Avro
-- Protobuf
-
-Add the scenario with the circular reference.

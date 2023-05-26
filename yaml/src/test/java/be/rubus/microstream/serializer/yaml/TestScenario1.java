@@ -4,7 +4,9 @@ import be.rubus.microstream.serializer.data.GenerateData;
 import be.rubus.microstream.serializer.data.Product;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.inspector.TrustedPrefixesTagInspector;
 import org.yaml.snakeyaml.nodes.Tag;
 
 import java.io.ByteArrayInputStream;
@@ -22,7 +24,10 @@ public class TestScenario1
         final List<Product> allProducts = GenerateData.products(5);
 
         // setup serializer
-        final Yaml yaml = new Yaml();
+        final LoaderOptions options = new LoaderOptions();
+        options.setTagInspector(new TrustedPrefixesTagInspector(List.of("be.rubus.microstream")));
+
+        final Yaml yaml = new Yaml(options);
 
         // Serialise
         final byte[] serializedContent = yaml.dumpAs(allProducts, Tag.BINARY, null)

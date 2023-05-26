@@ -19,24 +19,24 @@ public class TestScenario2
 
         SomeDataOuterClass.SomeData variant = Helper.createProtoVariant(someData);
 
-        // setup serializer
+    // setup serializer
 
-        // Serializer
+    // Serializer
 
-        final byte[] serializedContent = variant.toByteArray();
+    final byte[] serializedContent = variant.toByteArray();
 
-        // Deserialise
+    // Deserialise
 
-        SomeDataOuterClass.SomeData dataProto = SomeDataOuterClass.SomeData.newBuilder()
-                .mergeFrom(serializedContent)
-                .build();
+    SomeDataOuterClass.SomeData dataProto = SomeDataOuterClass.SomeData.newBuilder()
+            .mergeFrom(serializedContent)
+            .build();
 
 
-        SomeData data = Helper.createPojoVariant(dataProto);
+    SomeData data = Helper.createPojoVariant(dataProto);
 
-        // test for equality
+    // test for equality
         Assertions.assertThat(data)
-                .isEqualTo(someData);
-    }
+        .isEqualTo(someData);
+}
 
 }

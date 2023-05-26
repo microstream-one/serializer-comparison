@@ -1,7 +1,6 @@
 package be.rubus.microstream.serializer.redis;
 
 import be.rubus.microstream.serializer.data.GenerateData;
-import be.rubus.microstream.serializer.data.Product;
 import be.rubus.microstream.serializer.data.SomeData;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.runner.Runner;
