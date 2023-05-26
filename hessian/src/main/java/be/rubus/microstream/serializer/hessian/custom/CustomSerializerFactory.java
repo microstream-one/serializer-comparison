@@ -5,6 +5,7 @@ import com.caucho.hessian.io.Deserializer;
 import com.caucho.hessian.io.HessianProtocolException;
 import com.caucho.hessian.io.Serializer;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class CustomSerializerFactory extends AbstractSerializerFactory
@@ -16,6 +17,10 @@ public class CustomSerializerFactory extends AbstractSerializerFactory
         {
             return new LocalDateTimeSerializer();
         }
+        if (cl.equals(LocalDate.class))
+        {
+            return new LocalDateSerializer();
+        }
         return null;
 
     }
@@ -26,6 +31,10 @@ public class CustomSerializerFactory extends AbstractSerializerFactory
         if (cl.equals(LocalDateTime.class))
         {
             return new LocalDateTimeDeserializer();
+        }
+        if (cl.equals(LocalDate.class))
+        {
+            return new LocalDateDeserializer();
         }
         return null;
 

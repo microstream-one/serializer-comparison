@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+package one.microstream.compare.serializer.proto.model;
+
+import "google/protobuf/timestamp.proto";
+
+message Shops {
+  repeated Shop shops = 1;
+}
+
+message Shop {
+  string name = 1;
+  Warehouse store = 2;
+  repeated Order orders = 3;
+}
+
+message Warehouse {
+  repeated StockItem stockItems = 1;
+}
+
+message StockItem {
+  oneof item {
+      ShopProduct shopProduct = 1;
+    }
+  int32 count = 2;
+}
+
+message ShopProduct {
+  string name = 1;
+  double price = 2;
+  double sellingPrice = 3;
+  repeated string shopNames = 4;  // To break circular dependency as you cannot use Builder when circular references.
+}
+
+message Order {
+  string customerName = 1;
+  google.protobuf.Timestamp orderDate = 2;
+  repeated OrderLine orderLines = 3;
+}
+
+message OrderLine {
+  oneof item {
+    ShopProduct shopProduct = 1;
+  }
+  int32 amount = 2;
+}

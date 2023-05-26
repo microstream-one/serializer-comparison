@@ -1,0 +1,1 @@
+Make sure you prepare a Postgres database and the data. More info can be found in the file _commands.txt_

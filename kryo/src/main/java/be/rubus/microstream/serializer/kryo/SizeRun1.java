@@ -20,6 +20,7 @@ public class SizeRun1
 
 
         final Kryo kryo = new Kryo();
+        kryo.setReferences(true);
         kryo.register(ArrayList.class);
         kryo.register(Product.class);
 

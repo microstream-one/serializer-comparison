@@ -66,6 +66,9 @@
         <module>jaxb</module>
         <module>yaml</module>
         <module>jvm</module>
+        <module>protobuf</module>
+        <module>hibernate</module>
+        <module>redis</module>
     </modules>
 
 </project>

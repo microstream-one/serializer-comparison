@@ -6,7 +6,9 @@ import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
+import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.inspector.TrustedPrefixesTagInspector;
 import org.yaml.snakeyaml.nodes.Tag;
 
 import java.io.ByteArrayInputStream;
@@ -35,6 +37,8 @@ public class YAMLPerformanceRun1
 
     private Yaml reusedYaml;
 
+    private LoaderOptions options;
+
     private byte[] serializedContent;
 
     @Setup
@@ -42,13 +46,16 @@ public class YAMLPerformanceRun1
     {
         this.allProducts = GenerateData.products(10_000);
 
-        this.reusedYaml = new Yaml();
+        options = new LoaderOptions();
+        options.setTagInspector(new TrustedPrefixesTagInspector(List.of("be.rubus.microstream")));
+
+        this.reusedYaml = new Yaml(options);
         this.prepareDeserializedData();
     }
 
     private void prepareDeserializedData()
     {
-        final Yaml yaml = new Yaml();
+        final Yaml yaml = new Yaml(options);
 
         this.serializedContent = yaml.dumpAs(this.allProducts, Tag.BINARY, null)
                 .getBytes(Charset.defaultCharset());
@@ -67,7 +74,7 @@ public class YAMLPerformanceRun1
     public byte[] serializeWithInitialization()
     {
 
-        final Yaml yaml = new Yaml();
+        final Yaml yaml = new Yaml(options);
 
         final byte[] data;
 
@@ -99,7 +106,7 @@ public class YAMLPerformanceRun1
     public List<Product> deserializeWithInitialization()
     {
 
-        final Yaml yaml = new Yaml();
+        final Yaml yaml = new Yaml(options);
 
         final List<Product> products;
         try

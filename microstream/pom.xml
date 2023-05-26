@@ -13,7 +13,7 @@
     <artifactId>microstream</artifactId>
 
     <properties>
-        <microstream.version>07.01.00-MS-GA</microstream.version>
+        <microstream.version>08.00.00-MS-GA</microstream.version>
     </properties>
 
     <dependencies>
